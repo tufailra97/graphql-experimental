@@ -10,8 +10,8 @@
     "strictFunctionTypes": true,
     "removeComments": true,
     "esModuleInterop": true,
-    "rootDir": "./src",
-    "baseUrl": "./src"
+    "rootDir": "./",
+    "baseUrl": "./"
   },
   "include": ["src/**/*.ts"],
   "exclude": ["./dist", "./node_modules", "src/**/*.test.ts"]
