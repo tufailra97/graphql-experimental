@@ -1,10 +1,28 @@
-import express, { Application } from 'express';
-import { configs, initialise } from 'src/common/configs';
+import 'reflect-metadata';
 
-initialise();
+import { ApolloServer } from 'apollo-server';
+import { ApolloServerPluginLandingPageGraphQLPlayground } from 'apollo-server-core';
+import { resolve } from 'path';
+import { buildSchema } from 'type-graphql';
 
-const app: Application = express();
+import { configs } from 'src/common/configs';
+import { UsersResolver } from 'src/resolvers/users/users.resolver';
 
-app.listen(configs.PORT, async () => {
-  console.log(`SERVER IS RUNNING ON PORT ${configs.PORT}`);
-});
+const bootstrap = async () => {
+  const schema = await buildSchema({
+    resolvers: [UsersResolver],
+    emitSchemaFile: resolve(__dirname, './graphql/schema.gql')
+  });
+
+  const server = new ApolloServer({
+    schema,
+    introspection: true,
+    plugins: [ApolloServerPluginLandingPageGraphQLPlayground()]
+  });
+
+  const { url } = await server.listen(configs.PORT);
+
+  console.log(`Server is running, GraphQL Playground available at ${url}`);
+};
+
+bootstrap();

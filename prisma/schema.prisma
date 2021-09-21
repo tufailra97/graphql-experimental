@@ -13,11 +13,22 @@ generator client {
 model User {
   id          String   @id @default(uuid())
   username    String
-  email       String
+  email       String   @unique
   password    String
   dateCreated DateTime @default(now()) @map("date_created")
   dateUpdated DateTime @updatedAt @map("date_updated")
 
-
+  Posts Posts[]
   @@map("user")
+}
+
+model Posts {
+  id          String   @id @default(uuid())
+  userId      String   @map("user_id")
+  message     String   @default("")
+  user        User     @relation(fields: [userId], references: [id])
+  dateCreated DateTime @default(now()) @map("date_created")
+  dateUpdated DateTime @updatedAt @map("date_updated")
+
+  @@map("posts")
 }
